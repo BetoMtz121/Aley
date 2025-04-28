@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Galería de Fotos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fafafa;
+            padding: 20px;
+            text-align: center;
+        }
+        #upload {
+            margin-bottom: 20px;
+        }
+        .photo-container {
+            display: inline-block;
+            margin: 20px;
+            position: relative;
+        }
+        .photo {
+            width: 300px;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .photo:hover {
+            transform: scale(1.05);
+        }
+        .heart {
+            font-size: 30px;
+            color: gray;
+            margin-top: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .liked {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sube tus Fotos 📸</h1>
+
+    <input type="file" id="upload" accept="image/*" multiple>
+
+    <div id="gallery"></div>
+
+    <script>
+        const uploadInput = document.getElementById('upload');
+        const gallery = document.getElementById('gallery');
+
+        uploadInput.addEventListener('change', function() {
+            const files = Array.from(uploadInput.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = document.createElement('div');
+                    container.className = 'photo-container';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'photo';
+
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '♡'; // corazón vacío
+
+                    // Doble click en imagen = like
+                    img.addEventListener('dblclick', () => {
+                        heart.classList.toggle('liked');
+                        heart.innerHTML = heart.classList.contains('liked') ? '❤️' : '♡';
+                    });
+
+                    // Click en corazón = like
+                    heart.addEventListener('click', () => {
+                        heart.classList.toggle('liked');
+                        heart.innerHTML = heart.classList.contains('liked') ? '❤️' : '♡';
+                    });
+
+                    container.appendChild(img);
+                    container.appendChild(heart);
+                    gallery.appendChild(container);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+
+</body>
+</html>
